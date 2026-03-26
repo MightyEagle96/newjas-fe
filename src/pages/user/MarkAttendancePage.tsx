@@ -36,6 +36,7 @@ function MarkAttendancePage() {
   const [loading, setLoading] = useState(true);
   const [nscdc, setNscdc] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const [attendance, setAttendance] = useState<
     Record<string, AttendanceStatus>
@@ -83,6 +84,7 @@ function MarkAttendancePage() {
 
   const markAttendance = async () => {
     try {
+      setUploading(true);
       const { data } = await httpService.post("/centre/markattendance", {
         attendance,
         nscdc,
@@ -93,6 +95,8 @@ function MarkAttendancePage() {
       }
     } catch (error) {
       toastError(error);
+    } finally {
+      setUploading(false);
     }
   };
   return (
@@ -265,19 +269,20 @@ function MarkAttendancePage() {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="contained"
+            // variant="contained"
             color="success"
             onClick={markAttendance}
+            loading={uploading}
             //onClick={() => uploadAttendance()}
           >
-            Yes
+            Yes upload
           </Button>
           <Button
-            //variant="contained"
+            variant="contained"
             color="error"
             onClick={() => setShowModal(false)}
           >
-            No
+            Not yet
           </Button>
         </Modal.Footer>
       </Modal>
