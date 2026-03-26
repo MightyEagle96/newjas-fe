@@ -16,6 +16,7 @@ import {
   Tooltip,
   useMediaQuery,
   useTheme,
+  CircularProgress,
 } from "@mui/material";
 import {
   Menu,
@@ -27,7 +28,12 @@ import {
 import logo from "../assets/logo.png";
 import { useAppUser } from "../context/AppUserContext";
 
-export default function RichNavbar({ appUser, handlelogout, setLoading }) {
+export default function RichNavbar({
+  appUser,
+  handlelogout,
+  setLoading,
+  loading,
+}: any) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
   const theme = useTheme();
@@ -43,7 +49,7 @@ export default function RichNavbar({ appUser, handlelogout, setLoading }) {
     },
   ];
 
-  const isActive = (link) => location.pathname === link;
+  const isActive = (link: string) => location.pathname === link;
 
   const { user } = useAppUser();
 
@@ -211,7 +217,7 @@ export default function RichNavbar({ appUser, handlelogout, setLoading }) {
             }}
           >
             <ListItemIcon>
-              <Logout />
+              {loading ? <CircularProgress size={20} /> : <Logout />}
             </ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItemButton>

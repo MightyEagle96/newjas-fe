@@ -30,6 +30,7 @@ function NavbarComponent() {
       appUser={user}
       handlelogout={handleLogout}
       setLoading={setLoading}
+      loading={loading}
     />
   );
 }

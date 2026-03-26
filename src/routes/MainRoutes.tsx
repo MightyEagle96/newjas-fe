@@ -3,8 +3,6 @@ import LoadingPage from "../components/LoadingPage";
 import NotFound from "../pages/NotFound";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import SideMenuComponents from "../components/SideMenuComponents";
-
 import { adminRoutes } from "./adminRoutes";
 
 import HomePage from "../pages/HomePage";
