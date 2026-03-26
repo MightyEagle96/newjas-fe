@@ -3,11 +3,13 @@ import AdminHomePage from "../pages/admin/AdminHomePage";
 import NotFound from "../pages/NotFound";
 import ExaminationPage from "../pages/admin/ExaminationPage";
 import ViewExamination from "../pages/admin/ViewExamination";
+import DailyDashboard from "../pages/admin/DailyDashboard";
 
 export const adminRoutes = [
   { path: "/", component: AdminHomePage },
   { path: "/examinations", component: ExaminationPage },
   { path: "/examination", component: ViewExamination },
+  { path: "/dailydashboard", component: DailyDashboard },
   { path: "*", component: NotFound },
 ];
 

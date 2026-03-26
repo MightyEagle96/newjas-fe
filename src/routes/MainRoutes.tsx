@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminRoutes, adminRoutes } from "./adminRoutes";
 
 import HomePage from "../pages/HomePage";
-import AdminHomePage from "../pages/AdminHomePage";
+
 import { userRoutes } from "./userRoutes";
 import { accountRoles } from "../utils";
 
