@@ -1,4 +1,11 @@
-import { Alert, AlertTitle, Button, Typography, Skeleton } from "@mui/material";
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  Typography,
+  Skeleton,
+  Divider,
+} from "@mui/material";
 import { useAppUser } from "../../context/AppUserContext";
 import { httpService } from "../../httpService";
 import { toastError } from "../../components/ErrorToast";
@@ -69,6 +76,7 @@ function CentreHomePage() {
                   {user?.name}
                 </Typography>
               </div>
+              <Divider />
               <div>
                 <Typography
                   color="primary"
