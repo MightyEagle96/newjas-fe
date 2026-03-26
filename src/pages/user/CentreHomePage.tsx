@@ -5,12 +5,13 @@ import {
   Typography,
   Skeleton,
   Divider,
+  Avatar,
 } from "@mui/material";
 import { useAppUser } from "../../context/AppUserContext";
 import { httpService } from "../../httpService";
 import { toastError } from "../../components/ErrorToast";
 import { useEffect, useState } from "react";
-import { KeyboardArrowRight } from "@mui/icons-material";
+import { KeyboardArrowRight, People } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 interface IExamination {
@@ -111,9 +112,24 @@ function CentreHomePage() {
                   <span className="text-uppercase">{examination.name}</span>
                 </Alert>
 
-                <Typography variant="body1" color="GrayText">
+                <div className="col-lg-4 bg-light p-3 rounded d-flex justify-content-between align-items-center">
+                  <div>
+                    <Avatar>
+                      <People />
+                    </Avatar>
+                  </div>
+                  <div className="text-end">
+                    <Typography color="GrayText" variant="overline">
+                      DESGINATED OFFICIALS
+                    </Typography>
+                    <Typography variant="h5" fontWeight={700}>
+                      {count}
+                    </Typography>
+                  </div>
+                </div>
+                {/* <Typography variant="body1" color="GrayText">
                   Designated officials: {count}
-                </Typography>
+                </Typography> */}
               </div>
 
               <div>
