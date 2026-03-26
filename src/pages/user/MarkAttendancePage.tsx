@@ -103,13 +103,17 @@ function MarkAttendancePage() {
     <div>
       <div className="container">
         <div className="mb-4">
-          <Typography variant="h5" fontWeight={700}>
-            MARK ATTENDANCE
-          </Typography>
+          <div className="mb-3">
+            <Typography variant="h5" fontWeight={700}>
+              MARK ATTENDANCE
+            </Typography>
+          </div>
 
-          <Alert severity="info">
-            Kindly indicate the status for all officials
-          </Alert>
+          <div className="mb-3">
+            <Alert severity="info">
+              Kindly indicate the status for all officials
+            </Alert>
+          </div>
 
           {/* 🔥 Summary */}
           {!loading && (
