@@ -26,6 +26,7 @@ function CentreHomePage() {
   const { user } = useAppUser();
 
   const [examination, setExamination] = useState<IExamination | null>(null);
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
 
@@ -65,7 +66,14 @@ function CentreHomePage() {
     getExaminationOfficialsCount();
   }, []);
 
-  const currentHour = new Date().getHours();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHour(new Date().getHours());
+    }, 60000); // every 1 minute
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
   return (
     <div>
       <div className="container">
