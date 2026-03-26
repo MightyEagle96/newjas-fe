@@ -3,7 +3,7 @@ import LoadingPage from "../components/LoadingPage";
 import NotFound from "../pages/NotFound";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { adminRoutes } from "./adminRoutes";
+import { AdminRoutes, adminRoutes } from "./adminRoutes";
 
 import HomePage from "../pages/HomePage";
 import AdminHomePage from "../pages/AdminHomePage";
@@ -19,7 +19,7 @@ function MainRoutes() {
 
   const publicRoutes = [
     { path: "/", component: HomePage },
-    { path: "/admin", component: AdminHomePage },
+    { path: "/admin/*", component: AdminRoutes },
     { path: "*", component: NotFound },
   ];
 
