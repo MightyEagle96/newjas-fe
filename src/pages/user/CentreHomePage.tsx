@@ -20,6 +20,7 @@ interface IExamination {
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
+  activationHour: number;
 }
 function CentreHomePage() {
   const { user } = useAppUser();
@@ -32,6 +33,13 @@ function CentreHomePage() {
     try {
       setLoading(true);
       const { data } = await httpService("/examination/active");
+      console.log(data);
+
+      console.log({
+        currentHour: new Date().getHours(),
+        activationHour: data?.activationHour,
+      });
+      //console.log(new Date().getHours() >= data?.activationHour);
       setExamination(data);
     } catch (error) {
       toastError(error);
@@ -56,6 +64,8 @@ function CentreHomePage() {
 
     getExaminationOfficialsCount();
   }, []);
+
+  const currentHour = new Date().getHours();
   return (
     <div>
       <div className="container">
@@ -133,12 +143,20 @@ function CentreHomePage() {
               </div>
 
               <div>
+                {currentHour < examination.activationHour && (
+                  <Alert severity="info" className="mb-2">
+                    <AlertTitle>Upcoming Examination</AlertTitle>
+                    Attendance will be open at {examination.activationHour}
+                    :00 hours
+                  </Alert>
+                )}
                 <Button
                   variant="contained"
                   color="error"
                   endIcon={<KeyboardArrowRight />}
                   component={Link}
                   to="/markattendance"
+                  disabled={currentHour < examination.activationHour}
                 >
                   Mark attendance
                 </Button>
