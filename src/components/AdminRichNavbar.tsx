@@ -27,7 +27,6 @@ import {
   Cabin,
 } from "@mui/icons-material";
 import logo from "../assets/logo.png";
-import { useAppUser } from "../context/AppUserContext";
 
 export default function AdminRichNavbar({
   appUser,
@@ -57,8 +56,6 @@ export default function AdminRichNavbar({
   ];
 
   const isActive = (link: string) => location.pathname === link;
-
-  const { user } = useAppUser();
 
   return (
     <>

@@ -13,6 +13,7 @@ import { Table } from "react-bootstrap";
 
 type ICentre = {
   name: string;
+  centreId: string;
   password: string;
 };
 type IExamination = {
