@@ -95,7 +95,7 @@ export default function AdminRichNavbar({
             <img src={logo} height={32} />
             {/* <Avatar src={logo} alt="Logo" sx={{ width: 32, height: 32 }} /> */}
             <Typography variant="h6" fontWeight={700} color="success">
-              Centre {user?.centreId}
+              Admin
             </Typography>
           </Box>
 
