@@ -160,18 +160,23 @@ function ViewExamination() {
                   </Button>
                 </div>
                 <div className="my-3">
-                  <CardActionArea
+                  <Button
                     component={Link}
                     to={`/admin/proctors?examination=${id}`}
+                  >
+                    PROCTORS SECTION{" "}
+                  </Button>
+                  {/* <CardActionArea
+                    
                     className="bg-dark text-white rounded"
                   >
                     <CardContent>
                       <Typography fontWeight={700}>
-                        PROCTORS SECTION {"  "}
+                        
                         <PeopleAltOutlined />
                       </Typography>
                     </CardContent>
-                  </CardActionArea>
+                  </CardActionArea> */}
                 </div>
               </div>
             </div>
