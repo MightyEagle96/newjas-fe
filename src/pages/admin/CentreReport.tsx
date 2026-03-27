@@ -3,6 +3,7 @@ import {
   AlertTitle,
   Button,
   MenuItem,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -10,6 +11,7 @@ import { httpService } from "../../httpService";
 import { toastError } from "../../components/ErrorToast";
 import { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 type ICentre = {
   name: string;
@@ -77,6 +79,10 @@ function CentreReport() {
       setLoading(false);
     }
   };
+
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <div>
       <div className="container">
@@ -122,6 +128,7 @@ function CentreReport() {
             </Button>
           </div>
         </div>
+
         {centreDetail && (
           <div className="mb-4">
             <Alert severity="info">
@@ -145,44 +152,84 @@ function CentreReport() {
               <Typography variant="overline">Day {i + 1}</Typography>
               <Typography>{record.day}</Typography>
             </div>
-            <Table striped borderless>
-              <thead>
-                <tr className="fw-bold">
-                  <td>S. No.</td>
-                  <td>Name</td>
-                  <td>Role</td>
-                  <td>Status</td>
-                  <td>Time Log</td>
-                </tr>
-              </thead>
-              <tbody>
-                {record.officials.map((official, i) => (
-                  <tr key={official.fullName}>
-                    <td>{i + 1}.</td>
-                    <td>
-                      <Typography variant="body2" textTransform={"capitalize"}>
-                        {official.fullName}
-                      </Typography>
-                    </td>
-                    <td>
-                      <Typography variant="body2" textTransform="uppercase">
-                        {official.role}
-                      </Typography>
-                    </td>
-                    <td>
-                      <Typography variant="body2" textTransform="capitalize">
-                        {official.status}
-                      </Typography>
-                    </td>
-                    <td>
-                      <Typography variant="body2" textTransform="capitalize">
-                        {new Date(official.createdAt).toLocaleString()}
-                      </Typography>
-                    </td>
+
+            {isMobile ? (
+              record.officials.map((official, i) => (
+                <div key={i} className="p-2 mb-2 border rounded">
+                  <Typography variant="subtitle2" textTransform={"capitalize"}>
+                    {official.fullName}
+                  </Typography>
+                  <Stack
+                    direction={"row"}
+                    spacing={2}
+                    className="d-flex align-items-center"
+                  >
+                    <Typography
+                      variant="caption"
+                      gutterBottom
+                      textTransform="uppercase"
+                    >
+                      {official.role}
+                    </Typography>
+                    <Typography>|</Typography>
+                    <Typography
+                      variant="caption"
+                      color={
+                        official.status === "present" ? "success" : "error"
+                      }
+                    >
+                      {official.status}
+                    </Typography>
+                  </Stack>
+
+                  <Typography variant="caption" color="GrayText">
+                    {new Date(official.createdAt).toLocaleString()}
+                  </Typography>
+                </div>
+              ))
+            ) : (
+              <Table striped borderless>
+                <thead>
+                  <tr className="fw-bold">
+                    <td>S. No.</td>
+                    <td>Name</td>
+                    <td>Role</td>
+                    <td>Status</td>
+                    <td>Time Log</td>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {record.officials.map((official, i) => (
+                    <tr key={official.fullName}>
+                      <td>{i + 1}.</td>
+                      <td>
+                        <Typography
+                          variant="body2"
+                          textTransform={"capitalize"}
+                        >
+                          {official.fullName}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography variant="body2" textTransform="uppercase">
+                          {official.role}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography variant="body2" textTransform="capitalize">
+                          {official.status}
+                        </Typography>
+                      </td>
+                      <td>
+                        <Typography variant="body2" textTransform="capitalize">
+                          {new Date(official.createdAt).toLocaleString()}
+                        </Typography>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
           </div>
         ))}
       </div>
