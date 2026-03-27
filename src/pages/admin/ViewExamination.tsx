@@ -2,8 +2,15 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import { Button, Divider, Typography } from "@mui/material";
+import {
+  Button,
+  CardActionArea,
+  CardContent,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import { PeopleAltOutlined } from "@mui/icons-material";
 
 type ISummary = {
   selectedCentres: number;
@@ -68,7 +75,8 @@ function ViewExamination() {
   return (
     <div>
       <div className="container">
-        <div className="col-lg-6 mb-4 bg-danger rounded p-3">
+        <div className="col-lg-6 mb-4 text-light bg-danger rounded p-3">
+          <Typography variant="overline">Examination</Typography>
           <Typography
             textTransform={"uppercase"}
             variant="h4"
@@ -82,35 +90,35 @@ function ViewExamination() {
         {summary && (
           <div>
             <div className="row mb-4">
-              <div className="col-lg-3">
+              <div className="col-lg-3 my-2">
                 <Typography variant="overline">Selected Centres</Typography>
-                <Typography variant="h4">
+                <Typography variant="h5">
                   {summary.selectedCentres.toLocaleString()}
                 </Typography>
               </div>
-              <div className="col-lg-3">
+              <div className="col-lg-3 my-2">
                 <Typography variant="overline">Selected Officials</Typography>
-                <Typography variant="h4">
+                <Typography variant="h5">
                   {summary.selectedOfficials.toLocaleString()}
                 </Typography>
               </div>
-              <div className="col-lg-3">
+              <div className="col-lg-3 my-2">
                 <Typography variant="overline">Total Centre Reports</Typography>
-                <Typography variant="h4">
+                <Typography variant="h5">
                   {summary.totalCentreReports.toLocaleString()}
                 </Typography>
               </div>
-              <div className="col-lg-3">
+              <div className="col-lg-3 my-2">
                 <Typography variant="overline">
                   Total Official Reports
                 </Typography>
-                <Typography variant="h4">
+                <Typography variant="h5">
                   {summary.totalOfficialReports.toLocaleString()}
                 </Typography>
               </div>
             </div>
             <div className="row">
-              <div className="col-lg-5 bg-light rounded p-3 ">
+              <div className="col-lg-5 bg-light rounded p-3 my2">
                 <Typography variant="overline" gutterBottom>
                   Officers Breakdown
                 </Typography>
@@ -132,23 +140,39 @@ function ViewExamination() {
                   </div>
                 ))}
               </div>
-              <div className="col-lg-4">
-                <DatePicker
-                  sx={{ width: "100%" }}
-                  label="Examination Date"
-                  disableFuture
-                  onChange={(value) =>
-                    setExamDate(value ? value.toDate().toDateString() : "")
-                  }
-                />
+              <div className="col-lg-4 my-2">
+                <div className="mb-2">
+                  <DatePicker
+                    sx={{ width: "100%" }}
+                    label="Examination Date"
+                    disableFuture
+                    onChange={(value) =>
+                      setExamDate(value ? value.toDate().toDateString() : "")
+                    }
+                  />
 
-                <Button
-                  disabled={!examDate}
-                  component={Link}
-                  to={`/admin/dailydashboard?date=${examDate}&examination=${id}`}
-                >
-                  Get data
-                </Button>
+                  <Button
+                    disabled={!examDate}
+                    component={Link}
+                    to={`/admin/dailydashboard?date=${examDate}&examination=${id}`}
+                  >
+                    Get data
+                  </Button>
+                </div>
+                <div className="my-3">
+                  <CardActionArea
+                    component={Link}
+                    to={`/admin/proctors?examination=${id}`}
+                    className="bg-dark text-white rounded"
+                  >
+                    <CardContent>
+                      <Typography fontWeight={700}>
+                        PROCTORS SECTION {"  "}
+                        <PeopleAltOutlined />
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </div>
               </div>
             </div>
           </div>

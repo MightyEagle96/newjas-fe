@@ -18,7 +18,7 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <RefreshProvider>
           <LoadingProvider>
-            <div style={{ minHeight: "70vh" }}>
+            <div style={{ minHeight: "75vh" }}>
               <MainRoutes />
             </div>
             <FooterComponent />

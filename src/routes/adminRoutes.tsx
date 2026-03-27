@@ -5,6 +5,7 @@ import ExaminationPage from "../pages/admin/ExaminationPage";
 import ViewExamination from "../pages/admin/ViewExamination";
 import DailyDashboard from "../pages/admin/DailyDashboard";
 import CentreReport from "../pages/admin/CentreReport";
+import ProctorsSection from "../pages/admin/ProctorsSection";
 
 const ADMIN_BASE = "/admin";
 
@@ -14,5 +15,6 @@ export const adminRoutes = [
   { path: `${ADMIN_BASE}/examination`, component: ViewExamination },
   { path: `${ADMIN_BASE}/dailydashboard`, component: DailyDashboard },
   { path: `${ADMIN_BASE}/centrereports`, component: CentreReport },
+  { path: `${ADMIN_BASE}/proctors`, component: ProctorsSection },
   { path: "*", component: NotFound },
 ];
