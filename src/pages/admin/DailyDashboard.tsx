@@ -23,13 +23,20 @@ function DailyDashboard() {
       });
 
       setReports(data);
-      console.log(data);
     } catch (error) {
       toastError(error);
     }
   };
   useEffect(() => {
     getData();
+
+    const interval = setInterval(() => {
+      getData();
+    }, 60_000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
   return (
     <div>

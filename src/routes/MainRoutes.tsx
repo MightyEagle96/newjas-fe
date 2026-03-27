@@ -3,7 +3,7 @@ import LoadingPage from "../components/LoadingPage";
 import NotFound from "../pages/NotFound";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { AdminRoutes, adminRoutes } from "./adminRoutes";
+import { adminRoutes } from "./adminRoutes";
 
 import HomePage from "../pages/HomePage";
 
@@ -11,6 +11,8 @@ import { userRoutes } from "./userRoutes";
 import { accountRoles } from "../utils";
 
 import NavbarComponent from "../components/Navbar";
+import AdminHomePage from "../pages/AdminHomePage";
+import AdminNavbarComponent from "../components/AdminNavbar";
 
 function MainRoutes() {
   const { user, loading } = useAuth();
@@ -19,7 +21,8 @@ function MainRoutes() {
 
   const publicRoutes = [
     { path: "/", component: HomePage },
-    { path: "/admin/*", component: AdminRoutes },
+    //{ path: "/admin/*", component: AdminRoutes },
+    { path: "/admin", component: AdminHomePage },
     { path: "*", component: NotFound },
   ];
 
@@ -40,7 +43,9 @@ function MainRoutes() {
       {user ? (
         <>
           <div className="mb-5">
-            <NavbarComponent />
+            {user.role === accountRoles.user && <NavbarComponent />}
+
+            {user.role === accountRoles.admin && <AdminNavbarComponent />}
           </div>
           <Routes>
             {privateRoutes.map((c, i) => (

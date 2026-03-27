@@ -21,10 +21,10 @@ function AdminHomePage() {
 
     try {
       setLoading(true);
-      const { data } = await httpService.post("/admin/login", user);
+      const { data } = await httpService.post("/account/login", user);
 
       if (data) {
-        window.location.assign("/");
+        window.location.assign("/admin");
       }
     } catch (error) {
       toastError(error);
