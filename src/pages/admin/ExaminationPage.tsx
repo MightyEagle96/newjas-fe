@@ -8,8 +8,10 @@ import { Link } from "react-router-dom";
 
 function ExaminationPage() {
   const [exams, setExams] = useState([]);
+  const [loading, setLoading] = useState(false);
   const getData = async () => {
     try {
+      setLoading(true);
       const { data } = await httpService("examination/viewall");
       if (data) {
         setExams(data);
@@ -17,6 +19,8 @@ function ExaminationPage() {
       }
     } catch (error) {
       toastError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,7 +94,7 @@ function ExaminationPage() {
           </Typography>
         </div>
         <div>
-          <DataGrid columns={columns} rows={exams} />
+          <DataGrid columns={columns} rows={exams} loading={loading} />
         </div>
       </div>
     </div>
