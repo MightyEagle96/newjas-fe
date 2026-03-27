@@ -86,7 +86,7 @@ function CentreReport() {
           </Typography>
         </div>
         <div className="row mb-4">
-          <div className="col-lg-4">
+          <div className="col-lg-4 my-2">
             <TextField
               label="Examination"
               fullWidth
@@ -102,7 +102,7 @@ function CentreReport() {
               ))}
             </TextField>
           </div>
-          <div className="col-lg-2">
+          <div className="col-lg-2 my-2">
             <TextField
               fullWidth
               label="Centre ID"
@@ -111,7 +111,7 @@ function CentreReport() {
               }
             />
           </div>
-          <div className="col-lg-2">
+          <div className="col-lg-2 my-2">
             <Button
               loading={loading}
               onClick={getCentreReport}
