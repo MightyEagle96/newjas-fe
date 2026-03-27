@@ -2,15 +2,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  CardActionArea,
-  CardContent,
-  Divider,
-  Typography,
-} from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { PeopleAltOutlined } from "@mui/icons-material";
 
 type ISummary = {
   selectedCentres: number;
