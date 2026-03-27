@@ -135,6 +135,14 @@ function ProctorsSection() {
                 <TableSkeleton />
               ) : (
                 <Table striped>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>State</th>
+                      <th>Proctors</th>
+                      <th>Gap</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {fullyStaffed.map((c, i) => (
                       <tr>
@@ -197,6 +205,14 @@ function ProctorsSection() {
                 <TableSkeleton />
               ) : (
                 <Table striped>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>State</th>
+                      <th>Proctors</th>
+                      <th>Gap</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {underStaffed.map((c, i) => (
                       <tr>
@@ -257,6 +273,14 @@ function ProctorsSection() {
                 <TableSkeleton />
               ) : (
                 <Table striped borderless>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>State</th>
+                      <th>Proctors</th>
+                      <th>Gap</th>
+                    </tr>
+                  </thead>
                   <tbody>
                     {unStaffed.map((c, i) => (
                       <tr>
