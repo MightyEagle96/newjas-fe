@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { toastError } from "../../components/ErrorToast";
 import { useSearchParams } from "react-router-dom";
 import { httpService } from "../../httpService";
