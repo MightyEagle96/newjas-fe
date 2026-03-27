@@ -3,6 +3,7 @@ import {
   AlertTitle,
   Button,
   MenuItem,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -128,8 +129,27 @@ function CentreReport() {
             </Button>
           </div>
         </div>
+        {loading && (
+          <div>
+            {[1, 2, 3].map((_, i) => (
+              <div key={i} className="p-3 rounded mb-3 border">
+                <Skeleton width="40%" height={30} />
+                <Skeleton width="60%" height={20} />
 
-        {centreDetail && (
+                {[1, 2, 3].map((_, j) => (
+                  <div key={j} className="d-flex justify-content-between my-2">
+                    <Skeleton width="20%" />
+                    <Skeleton width="20%" />
+                    <Skeleton width="20%" />
+                    <Skeleton width="30%" />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {centreDetail && !loading && (
           <div className="mb-4">
             <Alert severity="info">
               <AlertTitle>Centre Detail</AlertTitle>
