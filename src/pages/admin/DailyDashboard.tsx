@@ -2,8 +2,9 @@ import { useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import { Divider, Typography, Skeleton } from "@mui/material";
+import { Divider, Typography, Skeleton, Button } from "@mui/material";
 import { Table } from "react-bootstrap";
+import { Download } from "@mui/icons-material";
 
 type IReport = {
   role: string;
@@ -32,11 +33,10 @@ function DailyDashboard() {
   );
   const examination = params.get("examination");
   const date = params.get("date");
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const fetchAllData = async () => {
     try {
-      setLoading(true);
-
       const [reportRes, otherRes] = await Promise.all([
         httpService("examination/dailydashboardreport", {
           params: { examination, day: date },
@@ -51,7 +51,7 @@ function DailyDashboard() {
     } catch (error) {
       toastError(error);
     } finally {
-      setLoading(false);
+      setInitialLoad(false);
     }
   };
 
@@ -71,7 +71,44 @@ function DailyDashboard() {
     };
   }, [examination, date]);
 
-  if (loading) return <DashboardSkeleton />;
+  if (initialLoad) return <DashboardSkeleton />;
+
+  const downloadReport = async (role: string) => {
+    try {
+      setLoading(true);
+      const response = await httpService("result/download-officials-report", {
+        params: {
+          examination,
+          day: date,
+          role,
+        },
+        responseType: "blob", // 🔥 VERY IMPORTANT
+      });
+
+      // Create file from blob
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      // Create temp link
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `report-${role}-${date}.xlsx`;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div>
       <div className="container my-5">
@@ -88,18 +125,30 @@ function DailyDashboard() {
                 <Divider />
               </div>
               <div className="text-muted">
-                <Typography variant="body2">
+                <Typography variant="body2" gutterBottom>
                   Present: {report.present.toLocaleString()}
                 </Typography>
                 {/* <Typography variant="body2">
                   Absent: {report.absent.toLocaleString()}
                 </Typography> */}
-                <Typography variant="body2">
+                <Typography variant="body2" gutterBottom>
                   Absent: {(report.expected - report.present).toLocaleString()}
                 </Typography>
-                <Typography variant="body2">
+                <Typography variant="body2" gutterBottom>
                   Expected: {report.expected.toLocaleString()}
                 </Typography>
+                <Divider sx={{ my: 2 }} />
+                <Button
+                  // variant="contained"
+                  size="small"
+                  endIcon={<Download />}
+                  color="info"
+                  onClick={() => downloadReport(report.role)}
+                  loading={loading}
+                  loadingPosition="end"
+                >
+                  Download Report
+                </Button>
               </div>
             </div>
           ))}
