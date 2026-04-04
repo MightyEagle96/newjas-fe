@@ -2,7 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import { Button, Divider, Typography } from "@mui/material";
+import { Button, Divider, Skeleton, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 
 type ISummary = {
@@ -31,32 +31,37 @@ function ViewExamination() {
   const [examination, setExamination] = useState<IExam | null>(null);
 
   const [summary, setSummary] = useState<ISummary | null>(null);
+
+  const [loadingExam, setLoadingExam] = useState(true);
+  const [loadingSummary, setLoadingSummary] = useState(true);
+
   const getExamination = async () => {
     try {
+      setLoadingExam(true);
       const { data } = await httpService("examination/viewone", {
         params: { id },
       });
 
-      if (data) {
-        setExamination(data);
-        console.log(data);
-      }
+      if (data) setExamination(data);
     } catch (error) {
       toastError(error);
+    } finally {
+      setLoadingExam(false);
     }
   };
 
   const getDashboardSummary = async () => {
     try {
+      setLoadingSummary(true);
       const { data } = await httpService("examination/dashboardsummary", {
         params: { id },
       });
-      if (data) {
-        setSummary(data);
-        console.log(data);
-      }
+
+      if (data) setSummary(data);
     } catch (error) {
       toastError(error);
+    } finally {
+      setLoadingSummary(false);
     }
   };
 
@@ -70,68 +75,80 @@ function ViewExamination() {
       <div className="container">
         <div className="col-lg-6 mb-4 text-light bg-danger rounded p-3">
           <Typography variant="overline">Examination</Typography>
-          <Typography
-            textTransform={"uppercase"}
-            variant="h4"
-            color={"white"}
-            fontWeight={700}
-          >
-            {examination?.name}
-          </Typography>
+          {loadingExam ? (
+            <Skeleton variant="text" width={250} height={40} />
+          ) : (
+            <Typography
+              textTransform={"uppercase"}
+              variant="h4"
+              color={"white"}
+              fontWeight={700}
+            >
+              {examination?.name}
+            </Typography>
+          )}
         </div>
 
         {summary && (
           <div>
-            <div className="row mb-4">
-              <div className="col-lg-3 my-2">
-                <Typography variant="overline">Selected Centres</Typography>
-                <Typography variant="h5">
-                  {summary.selectedCentres.toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-3 my-2">
-                <Typography variant="overline">Selected Officials</Typography>
-                <Typography variant="h5">
-                  {summary.selectedOfficials.toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-3 my-2">
-                <Typography variant="overline">Total Centre Reports</Typography>
-                <Typography variant="h5">
-                  {summary.totalCentreReports.toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-3 my-2">
-                <Typography variant="overline">
-                  Total Official Reports
-                </Typography>
-                <Typography variant="h5">
-                  {summary.totalOfficialReports.toLocaleString()}
-                </Typography>
+            <div>
+              <div className="row mb-4">
+                {[
+                  "Selected Centres",
+                  "Selected Officials",
+                  "Total Centre Reports",
+                  "Total Official Reports",
+                ].map((label, index) => (
+                  <div className="col-lg-3 my-2" key={index}>
+                    <Typography variant="overline">{label}</Typography>
+
+                    {loadingSummary ? (
+                      <Skeleton variant="text" width={80} height={30} />
+                    ) : (
+                      <Typography variant="h5">
+                        {[
+                          summary?.selectedCentres,
+                          summary?.selectedOfficials,
+                          summary?.totalCentreReports,
+                          summary?.totalOfficialReports,
+                        ][index]?.toLocaleString()}
+                      </Typography>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
             <div className="row">
-              <div className="col-lg-5 bg-light rounded p-3 my2">
+              <div className="col-lg-5 bg-light rounded p-3 my-2">
                 <Typography variant="overline" gutterBottom>
                   Officers Breakdown
                 </Typography>
-                {summary.officersBreakdown.map((item) => (
-                  <div className="mb-4">
-                    <div className="row">
-                      <div className="col-lg-6">
-                        <Typography textTransform={"uppercase"}>
-                          {item.role}
-                        </Typography>
+
+                {loadingSummary
+                  ? Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="mb-4">
+                        <Skeleton variant="text" width="60%" />
+                        <Skeleton variant="text" width="30%" />
+                        <Divider />
                       </div>
-                      <div className="col-lg-6">
-                        <Typography fontWeight={700}>
-                          {item.count.toLocaleString()}
-                        </Typography>
+                    ))
+                  : summary?.officersBreakdown.map((item, i) => (
+                      <div className="mb-4" key={i}>
+                        <div className="row">
+                          <div className="col-lg-6">
+                            <Typography textTransform={"uppercase"}>
+                              {item.role}
+                            </Typography>
+                          </div>
+                          <div className="col-lg-6">
+                            <Typography fontWeight={700}>
+                              {item.count.toLocaleString()}
+                            </Typography>
+                          </div>
+                        </div>
+                        <Divider />
                       </div>
-                    </div>
-                    <Divider />
-                  </div>
-                ))}
+                    ))}
               </div>
               <div className="col-lg-4 my-2">
                 <div className="mb-2">
@@ -152,24 +169,14 @@ function ViewExamination() {
                     Get data
                   </Button>
                 </div>
+
                 <div className="my-3">
                   <Button
                     component={Link}
                     to={`/admin/proctors?examination=${id}`}
                   >
-                    PROCTORS SECTION{" "}
+                    PROCTORS SECTION
                   </Button>
-                  {/* <CardActionArea
-                    
-                    className="bg-dark text-white rounded"
-                  >
-                    <CardContent>
-                      <Typography fontWeight={700}>
-                        
-                        <PeopleAltOutlined />
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea> */}
                 </div>
               </div>
             </div>
