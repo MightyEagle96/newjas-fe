@@ -93,8 +93,11 @@ function DailyDashboard() {
                 <Typography variant="body2">
                   Present: {report.present.toLocaleString()}
                 </Typography>
-                <Typography variant="body2">
+                {/* <Typography variant="body2">
                   Absent: {report.absent.toLocaleString()}
+                </Typography> */}
+                <Typography variant="body2">
+                  Absent: {(report.expected - report.present).toLocaleString()}
                 </Typography>
                 <Typography variant="body2">
                   Expected: {report.expected.toLocaleString()}
