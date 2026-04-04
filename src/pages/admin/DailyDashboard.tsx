@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import { Divider, Typography } from "@mui/material";
+import { Divider, Typography, Skeleton } from "@mui/material";
 import { Table } from "react-bootstrap";
 
 type IReport = {
@@ -26,54 +26,55 @@ type NscdcAndProctors = {
 function DailyDashboard() {
   const [params] = useSearchParams();
   const [reports, setReports] = useState<IReport[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const [otherReports, setOtherReports] = useState<NscdcAndProctors | null>(
     null,
   );
   const examination = params.get("examination");
   const date = params.get("date");
-  const getData = async () => {
-    try {
-      const { data } = await httpService("examination/dailydashboardreport", {
-        params: { examination, day: date },
-      });
 
-      setReports(data);
-    } catch (error) {
-      toastError(error);
-    }
-  };
-
-  const getNscdcAndProctors = async () => {
+  const fetchAllData = async () => {
     try {
-      const { data } = await httpService(
-        "examination/nscdcandproctorsdashboard",
-        {
+      setLoading(true);
+
+      const [reportRes, otherRes] = await Promise.all([
+        httpService("examination/dailydashboardreport", {
           params: { examination, day: date },
-        },
-      );
+        }),
+        httpService("examination/nscdcandproctorsdashboard", {
+          params: { examination, day: date },
+        }),
+      ]);
 
-      if (data) {
-        setOtherReports(data);
-        console.log(data);
-      }
+      setReports(reportRes.data);
+      setOtherReports(otherRes.data);
     } catch (error) {
       toastError(error);
+    } finally {
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    getData();
-    getNscdcAndProctors();
 
-    const interval = setInterval(() => {
-      getData();
-      getNscdcAndProctors();
-    }, 60_000);
+  useEffect(() => {
+    if (!examination || !date) return;
+
+    let isMounted = true;
+
+    const run = async () => {
+      await fetchAllData();
+    };
+
+    run();
+
+    const interval = setInterval(run, 60_000);
 
     return () => {
+      isMounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [examination, date]);
+
+  if (loading) return <DashboardSkeleton />;
   return (
     <div>
       <div className="container my-5">
@@ -185,3 +186,65 @@ function DailyDashboard() {
 }
 
 export default DailyDashboard;
+
+const DashboardSkeleton = () => {
+  return (
+    <div className="container my-5">
+      {/* Date */}
+      <div className="mb-4 text-center">
+        <Skeleton width={120} height={30} style={{ margin: "0 auto" }} />
+      </div>
+
+      {/* Top Cards */}
+      <div className="row d-flex justify-content-center m-0">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="col-lg-2 p-3 bg-light rounded mb-2 me-2">
+            <Skeleton width="60%" height={20} />
+            <Skeleton width="100%" height={10} />
+
+            <div className="mt-2">
+              <Skeleton width="80%" height={20} />
+              <Skeleton width="80%" height={20} />
+              <Skeleton width="80%" height={20} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <hr />
+
+      {/* Bottom Section */}
+      <div className="row">
+        {/* Total Centres */}
+        <div className="col-lg-3 rounded-3 p-3 m-1">
+          <Skeleton width="60%" height={20} />
+          <Skeleton width="40%" height={40} />
+        </div>
+
+        {/* NSCDC */}
+        <div className="col-lg-4 border rounded-3 p-3 m-1">
+          <Skeleton width="50%" height={20} />
+          <Skeleton width="60%" height={30} />
+
+          <div className="mt-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} width="100%" height={20} />
+            ))}
+          </div>
+        </div>
+
+        {/* PROCTORS */}
+        <div className="col-lg-4 border rounded-3 p-3 m-1">
+          <Skeleton width="50%" height={20} />
+          <Skeleton width="60%" height={30} />
+
+          <div className="mt-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} width="100%" height={20} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
