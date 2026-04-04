@@ -58,8 +58,6 @@ function DailyDashboard() {
   useEffect(() => {
     if (!examination || !date) return;
 
-    let isMounted = true;
-
     const run = async () => {
       await fetchAllData();
     };
@@ -69,7 +67,6 @@ function DailyDashboard() {
     const interval = setInterval(run, 60_000);
 
     return () => {
-      isMounted = false;
       clearInterval(interval);
     };
   }, [examination, date]);
