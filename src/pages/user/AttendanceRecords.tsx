@@ -7,6 +7,7 @@ import { Skeleton } from "@mui/material";
 type IRecord = {
   day: string;
   nscdc: number;
+  proctors: number;
   officials: [
     {
       fullName: string;
@@ -73,6 +74,7 @@ function AttendanceRecords() {
                     <Typography variant="overline" gutterBottom>
                       {c.day}
                     </Typography>
+                    <Typography>PROCTORS: {c.proctors}</Typography>
                     <Typography>NSCDC OFFICIALS: {c.nscdc}</Typography>
                   </div>
 

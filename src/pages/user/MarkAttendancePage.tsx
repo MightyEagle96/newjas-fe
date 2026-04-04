@@ -13,6 +13,7 @@ import { toastError } from "../../components/ErrorToast";
 import { Clear, Done } from "@mui/icons-material";
 import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export interface IOfficial {
   _id: string;
@@ -35,6 +36,7 @@ function MarkAttendancePage() {
   const [officials, setOfficials] = useState<IOfficial[]>([]);
   const [loading, setLoading] = useState(true);
   const [nscdc, setNscdc] = useState(0);
+  const [proctors, setProctors] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -44,6 +46,9 @@ function MarkAttendancePage() {
 
   const nscdcOfficials = [0, 1, 2];
 
+  const proctorsOfficials = [0, 1, 2, 3];
+
+  const navigate = useNavigate();
   const getExamOfficials = async () => {
     try {
       setLoading(true);
@@ -88,10 +93,15 @@ function MarkAttendancePage() {
       const { data } = await httpService.post("/centre/markattendance", {
         attendance,
         nscdc,
+        proctors,
       });
       if (data) {
         setShowModal(false);
         toast.success(data);
+
+        setTimeout(() => {
+          navigate("/records");
+        }, 2500);
       }
     } catch (error) {
       toastError(error);
@@ -217,6 +227,22 @@ function MarkAttendancePage() {
               })}
         </div>
 
+        {/* 🔥 PROCTOR Dropdown */}
+        <div className="mb-4">
+          <TextField
+            onChange={(e) => setProctors(Number(e.target.value))}
+            fullWidth
+            select
+            label="PROCTORS"
+            helperText="Kindly indicate the numbers of proctors present"
+          >
+            {proctorsOfficials.map((c, i) => (
+              <MenuItem value={c} key={i}>
+                {c}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
         {/* 🔥 NSCDC Dropdown */}
         <div className="mb-4">
           <TextField
@@ -224,6 +250,7 @@ function MarkAttendancePage() {
             fullWidth
             select
             label="NSCDC OFFICIALS"
+            helperText="Kindly indicate the numbers of NSCDC officials present"
           >
             {nscdcOfficials.map((c, i) => (
               <MenuItem value={c} key={i}>
@@ -245,7 +272,7 @@ function MarkAttendancePage() {
         </div>
       </div>
       <Modal centered show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="border-0">
           <Modal.Title>UPLOAD ATTENDANCE</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -257,6 +284,10 @@ function MarkAttendancePage() {
             <div className="mb-2 text-danger">
               <Typography variant="caption">Total Absent</Typography>
               <Typography variant="h5">{absentCount}</Typography>
+            </div>
+            <div className="mb-2 text-muted">
+              <Typography variant="caption">PROCTORS Count</Typography>
+              <Typography variant="h5">{proctors}</Typography>
             </div>
             <div className="mb-2 text-muted">
               <Typography variant="caption">NSCDC Count</Typography>
