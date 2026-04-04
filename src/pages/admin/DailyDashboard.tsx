@@ -109,6 +109,49 @@ function DailyDashboard() {
       setLoading(false);
     }
   };
+
+  const downloadNscdcGapReport = async () => {
+    try {
+      setLoading(true);
+
+      const response = await httpService("result/download-nscdc-gap-report", {
+        params: {
+          examination,
+          day: date,
+        },
+        responseType: "blob", // 🔥 critical
+      });
+
+      // Create blob
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      // Extract filename from backend (optional but clean)
+      const contentDisposition = response.headers["content-disposition"];
+      const fileName =
+        contentDisposition?.split("filename=")[1]?.replace(/"/g, "") ||
+        `nscdc-gap-${date}.xlsx`;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div>
       <div className="container my-5">
@@ -191,6 +234,17 @@ function DailyDashboard() {
                       ))}
                     </tbody>
                   </Table>
+                  <div className="text-end">
+                    <Button
+                      color="warning"
+                      onClick={downloadNscdcGapReport}
+                      loading={loading}
+                      loadingPosition="end"
+                      endIcon={<Download />}
+                    >
+                      Download Report
+                    </Button>
+                  </div>
                 </div>
               </div>
               <div className="col-lg-4 border rounded-3 p-3 m-1">
