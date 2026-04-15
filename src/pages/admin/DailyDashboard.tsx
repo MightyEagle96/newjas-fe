@@ -182,6 +182,52 @@ function DailyDashboard() {
     }
   };
 
+  const downloadProctorsGapReport = async () => {
+    try {
+      setLoading(true);
+
+      const response = await httpService(
+        "result/download-proctors-gap-report",
+        {
+          params: {
+            examination,
+            day: date,
+          },
+          responseType: "blob", // 🔥 critical
+        },
+      );
+
+      // Create blob
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      // Extract filename from backend (optional but clean)
+      const contentDisposition = response.headers["content-disposition"];
+      const fileName =
+        contentDisposition?.split("filename=")[1]?.replace(/"/g, "") ||
+        `proctors-gap-${date}.xlsx`;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const downloadAbsentReport = async () => {
     try {
       setLoading(true);
@@ -215,7 +261,7 @@ function DailyDashboard() {
           <Typography color="info">{date}</Typography>
         </div>
 
-        <div className="p-3 border rounded mb-4">
+        <div className="p-3 border rounded mb-4 overflow-scroll">
           <Table striped borderless>
             <thead>
               <tr>
@@ -393,6 +439,17 @@ function DailyDashboard() {
                       ))}
                     </tbody>
                   </Table>
+                  <div className="text-end">
+                    <Button
+                      color="warning"
+                      onClick={downloadProctorsGapReport}
+                      loading={loading}
+                      loadingPosition="end"
+                      endIcon={<Download />}
+                    >
+                      Download Report
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

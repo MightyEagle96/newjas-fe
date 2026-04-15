@@ -2,6 +2,7 @@ import {
   Alert,
   AlertTitle,
   Button,
+  Divider,
   MenuItem,
   Skeleton,
   Stack,
@@ -27,6 +28,7 @@ type IExamination = {
 type IRecord = {
   day: string;
   nscdc: number;
+  proctors: number;
   officials: [
     {
       fullName: string;
@@ -171,6 +173,20 @@ function CentreReport() {
             <div className="mb-3">
               <Typography variant="overline">Day {i + 1}</Typography>
               <Typography>{record.day}</Typography>
+              <Divider />
+              <Stack
+                className="text-primary"
+                direction={"row"}
+                spacing={2}
+                sx={{ mt: 2 }}
+              >
+                <Typography gutterBottom variant="body2">
+                  NSCDC: {record.nscdc}
+                </Typography>
+                <Typography gutterBottom variant="body2">
+                  PROCTORS: {record.proctors}
+                </Typography>
+              </Stack>
             </div>
 
             {isMobile ? (
