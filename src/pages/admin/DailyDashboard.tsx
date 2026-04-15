@@ -8,6 +8,7 @@ import {
   Skeleton,
   Button,
   IconButton,
+  Stack,
 } from "@mui/material";
 import { Table } from "react-bootstrap";
 import { Download } from "@mui/icons-material";
@@ -180,83 +181,133 @@ function DailyDashboard() {
       setLoading(false);
     }
   };
+
+  const downloadAbsentReport = async () => {
+    try {
+      setLoading(true);
+      const response = await httpService("result/download-absent-centre", {
+        params: {
+          examination,
+          day: date,
+        },
+        responseType: "blob", // 🔥 critical
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Absent_Centres_Report${date}.xlsx`);
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div>
-      <div className="container my-5">
+      <div className="container">
         <div className="mb-4 text-center ">
           <Typography color="info">{date}</Typography>
         </div>
 
-        <div>
-          <div className="row mb-2 border-bottom text-uppercase">
-            <div className="col-lg-2">
-              <Typography variant="h6">Role</Typography>
-            </div>
-            <div className="col-lg-2">
-              <Typography variant="h6" color="success">
-                Present
-              </Typography>
-            </div>
-            <div className="col-lg-2">
-              <Typography variant="h6" color="error">
-                Absent
-              </Typography>
-            </div>
-            <div className="col-lg-2">
-              <Typography variant="h6" color="primary">
-                Expected
-              </Typography>
-            </div>
-            <div className="col-lg-2">
-              <Typography variant="h6">Download Report</Typography>
-            </div>
-          </div>
-
-          {reports.map((report) => (
-            <div className="row border-bottom d-flex align-items-center">
-              <div className="col-lg-2">
-                <Typography variant="body2" textTransform={"uppercase"}>
-                  {report.role}
-                </Typography>
-              </div>
-              <div className="col-lg-2">
-                <Typography variant="body2" color="success">
-                  {report.present.toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-2" color="error">
-                <Typography variant="body2" gutterBottom>
-                  {(report.expected - report.present).toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-2">
-                <Typography variant="body2" color="primary">
-                  {report.expected.toLocaleString()}
-                </Typography>
-              </div>
-              <div className="col-lg-2">
-                <IconButton
-                  disabled={loading}
-                  onClick={() => downloadReport(report.role)}
-                >
-                  <Download />
-                </IconButton>
-              </div>
-            </div>
-          ))}
+        <div className="p-3 border rounded mb-4">
+          <Table striped borderless>
+            <thead>
+              <tr>
+                <th>
+                  <Typography fontWeight={700}>Role</Typography>
+                </th>
+                <th>
+                  <Typography fontWeight={700} color="success">
+                    Present
+                  </Typography>
+                </th>
+                <th>
+                  <Typography fontWeight={700} color="error">
+                    Absent
+                  </Typography>
+                </th>
+                <th>
+                  <Typography fontWeight={700} color="primary">
+                    Expected
+                  </Typography>
+                </th>
+                <th>
+                  <Typography fontWeight={700} sx={{ color: "GrayText" }}>
+                    Download Report
+                  </Typography>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.map((report) => (
+                <tr key={report.role}>
+                  <td>
+                    <Typography
+                      variant="body2"
+                      color="GrayText"
+                      textTransform={"uppercase"}
+                    >
+                      {report.role}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2" color="success">
+                      {report.present.toLocaleString()}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2" gutterBottom color="error">
+                      {(report.expected - report.present).toLocaleString()}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body2" color="primary">
+                      {report.expected.toLocaleString()}
+                    </Typography>
+                  </td>
+                  <td>
+                    <IconButton
+                      size="small"
+                      disabled={loading}
+                      onClick={() => downloadReport(report.role)}
+                    >
+                      <Download />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         </div>
 
-        <hr />
         {otherReports && (
           <div>
             <div className="row  ">
               <div className="col-lg-3 rounded-3 p-3 m-1">
                 <div className="mb-2 text-primary">
                   <Typography variant="caption">Uploaded Centres</Typography>
-                  <Typography variant="h5" fontWeight={700}>
-                    {overviewReport?.uploadedCentres}/
-                    {otherReports.totalCentres.toLocaleString()}
-                  </Typography>
+                  <Stack spacing={2} direction={"row"} alignItems={"center"}>
+                    <div>
+                      <Typography variant="h5" fontWeight={700}>
+                        {overviewReport?.uploadedCentres}/
+                        {otherReports.totalCentres.toLocaleString()}
+                      </Typography>
+                    </div>
+                    <div>
+                      <IconButton
+                        loading={loading}
+                        onClick={downloadAbsentReport}
+                      >
+                        <Download />
+                      </IconButton>
+                    </div>
+                  </Stack>
                 </div>
                 <div className="mb-2 text-success">
                   <Typography variant="caption">Present Officials</Typography>
