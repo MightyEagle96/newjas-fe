@@ -173,8 +173,17 @@ function MarkAttendancePage() {
                           textTransform={"uppercase"}
                           fontWeight={500}
                           color="GrayText"
+                          gutterBottom
                         >
                           {official.fullName}
+                        </Typography>
+                        <Typography
+                          textTransform={"uppercase"}
+                          color="GrayText"
+                          gutterBottom
+                          variant="overline"
+                        >
+                          {official.phoneNumber}
                         </Typography>
                       </div>
 
