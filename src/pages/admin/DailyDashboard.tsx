@@ -182,12 +182,104 @@ function DailyDashboard() {
     }
   };
 
+  const downloadExternalNscdcGapReport = async () => {
+    try {
+      setLoading(true);
+
+      const response = await httpService(
+        "result/download-external-nscdc-gap-report",
+        {
+          params: {
+            examination,
+            day: date,
+          },
+          responseType: "blob", // 🔥 critical
+        },
+      );
+
+      // Create blob
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      // Extract filename from backend (optional but clean)
+      const contentDisposition = response.headers["content-disposition"];
+      const fileName =
+        contentDisposition?.split("filename=")[1]?.replace(/"/g, "") ||
+        `nscdc-gap-${date}.xlsx`;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const downloadProctorsGapReport = async () => {
     try {
       setLoading(true);
 
       const response = await httpService(
         "result/download-proctors-gap-report",
+        {
+          params: {
+            examination,
+            day: date,
+          },
+          responseType: "blob", // 🔥 critical
+        },
+      );
+
+      // Create blob
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+
+      // Extract filename from backend (optional but clean)
+      const contentDisposition = response.headers["content-disposition"];
+      const fileName =
+        contentDisposition?.split("filename=")[1]?.replace(/"/g, "") ||
+        `proctors-gap-${date}.xlsx`;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      toastError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadExternalProctorsGapReport = async () => {
+    try {
+      setLoading(true);
+
+      const response = await httpService(
+        "result/download-external-proctors-gap-report",
         {
           params: {
             examination,
@@ -399,15 +491,26 @@ function DailyDashboard() {
                     </tbody>
                   </Table>
                   <div className="text-end">
-                    <Button
-                      color="warning"
-                      onClick={downloadNscdcGapReport}
-                      loading={loading}
-                      loadingPosition="end"
-                      endIcon={<Download />}
-                    >
-                      Download Report
-                    </Button>
+                    <Stack direction={"row"} spacing={2}>
+                      <Button
+                        color="primary"
+                        onClick={downloadNscdcGapReport}
+                        loading={loading}
+                        loadingPosition="end"
+                        endIcon={<Download />}
+                      >
+                        Internal Report
+                      </Button>
+                      <Button
+                        color="error"
+                        onClick={downloadExternalNscdcGapReport}
+                        loading={loading}
+                        loadingPosition="end"
+                        endIcon={<Download />}
+                      >
+                        External Report
+                      </Button>
+                    </Stack>
                   </div>
                 </div>
               </div>
@@ -440,15 +543,26 @@ function DailyDashboard() {
                     </tbody>
                   </Table>
                   <div className="text-end">
-                    <Button
-                      color="warning"
-                      onClick={downloadProctorsGapReport}
-                      loading={loading}
-                      loadingPosition="end"
-                      endIcon={<Download />}
-                    >
-                      Download Report
-                    </Button>
+                    <Stack direction={"row"} spacing={2}>
+                      <Button
+                        color="primary"
+                        onClick={downloadProctorsGapReport}
+                        loading={loading}
+                        loadingPosition="end"
+                        endIcon={<Download />}
+                      >
+                        Internal Report
+                      </Button>
+                      <Button
+                        color="error"
+                        onClick={downloadExternalProctorsGapReport}
+                        loading={loading}
+                        loadingPosition="end"
+                        endIcon={<Download />}
+                      >
+                        External Report
+                      </Button>
+                    </Stack>
                   </div>
                 </div>
               </div>

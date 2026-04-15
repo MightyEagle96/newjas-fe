@@ -8,7 +8,7 @@ console.log(baseURL);
 const httpService = axios.create({
   baseURL,
   withCredentials: true,
-  timeout: 10000,
+  timeout: 40000,
   headers: {
     "Content-Type": "application/json",
   },
