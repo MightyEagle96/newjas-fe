@@ -274,7 +274,7 @@ function DailyDashboard() {
                   <td>
                     <IconButton
                       size="small"
-                      disabled={loading}
+                      loading={loading}
                       onClick={() => downloadReport(report.role)}
                     >
                       <Download />
