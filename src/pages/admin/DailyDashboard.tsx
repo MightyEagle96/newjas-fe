@@ -24,6 +24,20 @@ type NscdcAndProctors = {
   totalProctors: number;
   totalCentres: number;
 };
+
+type OverviewReport = {
+  selectedCentres: number;
+  uploadedCentres: number;
+  selectedOfficials: number;
+  expectedProctors: number;
+  expectedNscdc: number;
+  totalNscdc: number;
+  totalProctors: number;
+  totalCentres: number;
+  totalOfficials: number;
+  presentOfficials: number;
+  absentOfficials: number;
+};
 function DailyDashboard() {
   const [params] = useSearchParams();
   const [reports, setReports] = useState<IReport[]>([]);
@@ -34,20 +48,29 @@ function DailyDashboard() {
   const examination = params.get("examination");
   const date = params.get("date");
   const [initialLoad, setInitialLoad] = useState(true);
+  const [overviewReport, setOverviewReport] = useState<OverviewReport | null>(
+    null,
+  );
 
   const fetchAllData = async () => {
     try {
-      const [reportRes, otherRes] = await Promise.all([
+      const [reportRes, otherRes, overviewRes] = await Promise.all([
         httpService("examination/dailydashboardreport", {
           params: { examination, day: date },
         }),
         httpService("examination/nscdcandproctorsdashboard", {
           params: { examination, day: date },
         }),
+
+        httpService("examination/overviewreport", {
+          params: { examination, day: date },
+        }),
       ]);
 
+      console.log(overviewRes.data);
       setReports(reportRes.data);
       setOtherReports(otherRes.data);
+      setOverviewReport(overviewRes.data);
     } catch (error) {
       toastError(error);
     } finally {
@@ -200,11 +223,28 @@ function DailyDashboard() {
         {otherReports && (
           <div>
             <div className="row  ">
-              <div className="col-lg-3 rounded-3 p-3 m-1 text-success">
-                <Typography>Total Centres</Typography>
-                <Typography variant="h3">
-                  {otherReports.totalCentres.toLocaleString()}
-                </Typography>
+              <div className="col-lg-3 rounded-3 p-3 m-1">
+                <div className="mb-2 text-primary">
+                  <Typography variant="caption">Uploaded Centres</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {overviewReport?.uploadedCentres}/
+                    {otherReports.totalCentres.toLocaleString()}
+                  </Typography>
+                </div>
+                <div className="mb-2 text-success">
+                  <Typography variant="caption">Present Officials</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {overviewReport?.presentOfficials.toLocaleString()}/
+                    {overviewReport?.totalOfficials.toLocaleString()}
+                  </Typography>
+                </div>
+                <div className="mb-2 text-danger">
+                  <Typography variant="caption">Absent Officials</Typography>
+                  <Typography variant="h5" fontWeight={700}>
+                    {overviewReport?.absentOfficials.toLocaleString()}/
+                    {overviewReport?.totalOfficials.toLocaleString()}
+                  </Typography>
+                </div>
               </div>
               <div className="col-lg-4 border rounded-3 p-3 m-1">
                 <div className="mb-2">
