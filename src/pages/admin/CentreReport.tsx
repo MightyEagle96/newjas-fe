@@ -19,6 +19,7 @@ type ICentre = {
   name: string;
   centreId: string;
   password: string;
+  state: string;
 };
 type IExamination = {
   _id: string;
@@ -163,6 +164,11 @@ function CentreReport() {
                 <br />
                 <Typography variant="caption" gutterBottom>
                   Password: {centreDetail.password}
+                </Typography>
+                <br />
+                <Typography variant="caption" gutterBottom>
+                  State:{" "}
+                  <span className="text-uppercase">{centreDetail.state}</span>
                 </Typography>
               </div>
             </Alert>
