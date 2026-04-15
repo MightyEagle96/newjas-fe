@@ -2,7 +2,13 @@ import { useSearchParams } from "react-router-dom";
 import { toastError } from "../../components/ErrorToast";
 import { httpService } from "../../httpService";
 import { useEffect, useState } from "react";
-import { Divider, Typography, Skeleton, Button } from "@mui/material";
+import {
+  Divider,
+  Typography,
+  Skeleton,
+  Button,
+  IconButton,
+} from "@mui/material";
 import { Table } from "react-bootstrap";
 import { Download } from "@mui/icons-material";
 
@@ -67,7 +73,6 @@ function DailyDashboard() {
         }),
       ]);
 
-      console.log(overviewRes.data);
       setReports(reportRes.data);
       setOtherReports(otherRes.data);
       setOverviewReport(overviewRes.data);
@@ -181,44 +186,66 @@ function DailyDashboard() {
         <div className="mb-4 text-center ">
           <Typography color="info">{date}</Typography>
         </div>
-        <div className="row d-flex justify-content-center m-0">
+
+        <div>
+          <div className="row mb-2 border-bottom text-uppercase">
+            <div className="col-lg-2">
+              <Typography variant="h6">Role</Typography>
+            </div>
+            <div className="col-lg-2">
+              <Typography variant="h6" color="success">
+                Present
+              </Typography>
+            </div>
+            <div className="col-lg-2">
+              <Typography variant="h6" color="error">
+                Absent
+              </Typography>
+            </div>
+            <div className="col-lg-2">
+              <Typography variant="h6" color="primary">
+                Expected
+              </Typography>
+            </div>
+            <div className="col-lg-2">
+              <Typography variant="h6">Download Report</Typography>
+            </div>
+          </div>
+
           {reports.map((report) => (
-            <div className="col-lg-2 p-3 bg-light rounded mb-2 me-2">
-              <div className="mb-2">
-                <Typography textTransform={"uppercase"} fontWeight={500}>
+            <div className="row border-bottom d-flex align-items-center">
+              <div className="col-lg-2">
+                <Typography variant="body2" textTransform={"uppercase"}>
                   {report.role}
                 </Typography>
-                <Divider />
               </div>
-              <div className="text-muted">
-                <Typography variant="body2" gutterBottom>
-                  Present: {report.present.toLocaleString()}
+              <div className="col-lg-2">
+                <Typography variant="body2" color="success">
+                  {report.present.toLocaleString()}
                 </Typography>
-                {/* <Typography variant="body2">
-                  Absent: {report.absent.toLocaleString()}
-                </Typography> */}
+              </div>
+              <div className="col-lg-2" color="error">
                 <Typography variant="body2" gutterBottom>
-                  Absent: {(report.expected - report.present).toLocaleString()}
+                  {(report.expected - report.present).toLocaleString()}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Expected: {report.expected.toLocaleString()}
+              </div>
+              <div className="col-lg-2">
+                <Typography variant="body2" color="primary">
+                  {report.expected.toLocaleString()}
                 </Typography>
-                <Divider sx={{ my: 2 }} />
-                <Button
-                  // variant="contained"
-                  size="small"
-                  endIcon={<Download />}
-                  color="info"
+              </div>
+              <div className="col-lg-2">
+                <IconButton
+                  disabled={loading}
                   onClick={() => downloadReport(report.role)}
-                  loading={loading}
-                  loadingPosition="end"
                 >
-                  Download Report
-                </Button>
+                  <Download />
+                </IconButton>
               </div>
             </div>
           ))}
         </div>
+
         <hr />
         {otherReports && (
           <div>
