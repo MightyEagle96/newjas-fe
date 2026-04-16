@@ -26,6 +26,22 @@ type IExamination = {
   name: string;
 };
 
+interface IOfficial {
+  _id: string;
+  role: string;
+  department: string;
+  centre: string;
+  idCard: string;
+  phoneNumber: string;
+  fullName: string;
+  email: string;
+  examination: string;
+  createdAt: Date;
+  updatedAt: Date;
+  conraiss: string;
+  gender: string;
+}
+
 type IRecord = {
   day: string;
   nscdc: number;
@@ -45,6 +61,7 @@ function CentreReport() {
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState<IRecord[]>([]);
   const [centreDetail, setCentreDetail] = useState<ICentre | null>(null);
+  const [officials, setOfficials] = useState<IOfficial[]>([]);
   const getData = async () => {
     try {
       setLoading(true);
@@ -76,6 +93,7 @@ function CentreReport() {
 
       setRecords(data.result);
       setCentreDetail(data.centre);
+      setOfficials(data.officials);
       console.log(data);
     } catch (error) {
       toastError(error);
@@ -174,6 +192,52 @@ function CentreReport() {
             </Alert>
           </div>
         )}
+
+        <div className="overflow-scroll">
+          <Typography variant="overline">Officials</Typography>
+          <Table striped borderless>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {officials.map((official, i) => (
+                <tr key={i}>
+                  <td
+                    style={{
+                      fontWeight: 300,
+                      fontSize: 14,
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {official.fullName}
+                  </td>
+                  <td
+                    style={{
+                      fontWeight: 300,
+                      fontSize: 14,
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {official.role}
+                  </td>
+                  <td
+                    style={{
+                      fontWeight: 300,
+                      fontSize: 14,
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {official.phoneNumber}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
         {records.map((record, i) => (
           <div key={record.day} className="p-3 rounded mb-3 border">
             <div className="mb-3">
