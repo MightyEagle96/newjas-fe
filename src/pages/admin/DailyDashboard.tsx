@@ -590,7 +590,7 @@ function DailyDashboard() {
                         External Report
                       </Button>
                     </Stack>
-                    <Button
+                    {/* <Button
                       color="error"
                       onClick={downloadNamedProctors}
                       loading={loading}
@@ -598,7 +598,7 @@ function DailyDashboard() {
                       endIcon={<Download />}
                     >
                       named proctors
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </div>
