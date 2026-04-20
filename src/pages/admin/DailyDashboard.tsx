@@ -347,32 +347,32 @@ function DailyDashboard() {
     }
   };
 
-  const downloadNamedProctors = async () => {
-    try {
-      setLoading(true);
-      const response = await httpService("result/download-named-proctors", {
-        params: {
-          examination,
-          day: date,
-        },
-        responseType: "blob", // 🔥 critical
-      });
+  // const downloadNamedProctors = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await httpService("result/download-named-proctors", {
+  //       params: {
+  //         examination,
+  //         day: date,
+  //       },
+  //       responseType: "blob", // 🔥 critical
+  //     });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `Absent_Proctors${date}.xlsx`);
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `Absent_Proctors${date}.xlsx`);
 
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      toastError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.remove();
+  //   } catch (error) {
+  //     toastError(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <div>
       <div className="container">
