@@ -474,7 +474,7 @@ function DailyDashboard() {
                     </div>
                   </Stack>
                 </div>
-                <div className="mb-2 text-success">
+                {/* <div className="mb-2 text-success">
                   <Typography variant="caption">Present Officials</Typography>
                   <Typography variant="h5" fontWeight={700}>
                     {overviewReport?.presentOfficials.toLocaleString()}/
@@ -487,7 +487,7 @@ function DailyDashboard() {
                     {overviewReport?.absentOfficials.toLocaleString()}/
                     {overviewReport?.totalOfficials.toLocaleString()}
                   </Typography>
-                </div>
+                </div> */}
               </div>
               <div className="col-lg-4 border rounded-3 p-3 m-1">
                 <div className="mb-2">
